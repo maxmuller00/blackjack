@@ -1,0 +1,103 @@
+import math
+import random
+from operator import truediv
+
+debug = False
+
+#This will be the dealer's hand
+dealer = []
+#This will be the player's hand
+player = []
+
+#Here is a list of cards
+cards = [1,2,3,4,5,6,7,8,9,10,'k','q','j']
+#list of face cards
+facecards = ['k','q','j']
+
+play = True
+
+def dealCard():
+    x = random.choice(cards)
+    if x in facecards:
+        x = 10
+    return x;
+
+while(play):
+    dealer = []
+    player = []
+    #deal the player two cards and the dealer two cards, one hidden
+    #ask if the player would like to recieve another card or stand
+    #if player cards are ace and face card, natural
+    #if dealer has natural, dealer wins
+    #if both have natural, tie
+    #if player over 21, bust
+    #dealer reveals hand, stands if 17 or more. if ace brings to soft 17, dealer stands
+    #if face up card for dealer is an ace, ask player if they want insurance
+    
+    for i in range(2):
+        dealer.append(dealCard())
+        player.append(dealCard())
+    if(debug):
+        print(dealer)
+    answer = 'Y'
+
+    while(answer.upper == 'Y'):
+        Ptotal = 0
+        for card in player:
+            Ptotal += card
+        if Ptotal > 21:
+            print("Bust")
+            play = False
+            break;
+        if Ptotal == 21:
+            print("Win!")
+            play = False
+            break;
+        print("Dealer's hand: ")
+        print("?, ", end="")
+        for i in range(1,len(dealer)):
+            print(dealer[i])
+        print("Your hand: ")
+        for card in player:
+            print(str(card) + ", ", end="")
+        print()
+        answer = input("Would you like to be dealt another card? Y/N\n")
+        if answer.upper == 'Y':
+            player.append(dealCard())
+        elif answer.upper == 'N':
+            Dtotal = 0
+            deal = True
+            while(deal):
+                print("Dealer's hand: ")
+                for card in dealer:
+                    Dtotal += card
+                    print(str(card) + ", ", end="")
+                print()
+                if Dtotal < 17:
+                    dealer.append(dealCard())
+                elif Dtotal == 21:
+                    print("Dealer has won.")
+                    break
+                else:
+                    break
+            if (Dtotal > 21) and (Ptotal <= 21):
+                print("\nYou win!")
+            elif (Dtotal > Ptotal):
+                print("\nDealer wins")
+            else:
+                print("\nYou beat the dealer!")
+            play = False
+            break
+        else:
+            print("Please enter Y or N")
+        
+        
+
+    
+
+
+
+
+
+
+
