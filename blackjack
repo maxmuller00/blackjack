@@ -1,6 +1,6 @@
 import math
 import random
-from operator import truediv
+
 
 debug = False
 
@@ -14,15 +14,14 @@ cards = [1,2,3,4,5,6,7,8,9,10,'k','q','j']
 #list of face cards
 facecards = ['k','q','j']
 
-play = True
 
+
+#deals a card from the list of cards chosen at random
 def dealCard():
     x = random.choice(cards)
-    if x in facecards:
-        x = 10
     return x;
 
-while(play):
+def playBlackjack():
     dealer = []
     player = []
     #deal the player two cards and the dealer two cards, one hidden
@@ -33,7 +32,8 @@ while(play):
     #if player over 21, bust
     #dealer reveals hand, stands if 17 or more. if ace brings to soft 17, dealer stands
     #if face up card for dealer is an ace, ask player if they want insurance
-    
+
+    #deals cards to player and dealer  
     for i in range(2):
         dealer.append(dealCard())
         player.append(dealCard())
@@ -41,57 +41,106 @@ while(play):
         print(dealer)
     answer = 'Y'
 
-    while(answer.upper == 'Y'):
+    #do
+    while(answer == 'Y'):
+        #calculates the cards in the player's hand as a total. if over 21, bust; if equal, win
         Ptotal = 0
+        #edge case for when we have an ace. switches it to end of list so that we may calculate it more easily
+        if 'a' in player:
+            pos1 = player.index('a')
+            pos2 = len(player)-1
+            sub = player[pos2]
+            player[pos2] = 'a'
+            player[pos1] = sub
+        #if 11 plus total over 21, that ace will equal a 1, otherwise it equals 11 to get closer to 21
         for card in player:
-            Ptotal += card
+            if card == 'a':
+                if (Ptotal + 11) > 21:
+                    Ptotal += 1
+                else:
+                    Ptotal += 11
+            #if card is a facecard, add 10
+            elif card in facecards:
+                Ptotal += 10
+            else:
+                Ptotal += card
         if Ptotal > 21:
+            print("Your hand: ")
+            for card in player:
+             print(str(card) + ", ", end="")
+            print("\n---------------")
             print("Bust")
-            play = False
             break;
         if Ptotal == 21:
+            print("Your hand: ")
+            for card in player:
+             print(str(card) + ", ", end="")
+            print("\n---------------")
             print("Win!")
-            play = False
             break;
+        #dealer's hand shows only the last card, hides the first card as in normal blackjack
         print("Dealer's hand: ")
         print("?, ", end="")
         for i in range(1,len(dealer)):
             print(dealer[i])
+        #shows player their entire hand
         print("Your hand: ")
         for card in player:
             print(str(card) + ", ", end="")
         print()
         answer = input("Would you like to be dealt another card? Y/N\n")
-        if answer.upper == 'Y':
+        if answer == 'Y':
             player.append(dealCard())
-        elif answer.upper == 'N':
+        elif answer == 'N':
+            #calculates the same for dealer, however if dealer total 17 or higher, they stand
             Dtotal = 0
             deal = True
+            #deal is our truth value that will allow the dealer to keep dealing itself cards
             while(deal):
+                #now prints all cards in dealer's hand
                 print("Dealer's hand: ")
                 for card in dealer:
-                    Dtotal += card
+                    if card in facecards:
+                        Dtotal += 10
+                    else:
+                        Dtotal += card
                     print(str(card) + ", ", end="")
                 print()
+                #if less than 17, deals 
                 if Dtotal < 17:
                     dealer.append(dealCard())
+                #if 21, dealer wins
                 elif Dtotal == 21:
                     print("Dealer has won.")
-                    break
+                    deal = False
                 else:
-                    break
+                    deal = False
+            #if dealer over 21 but player is not, palyer wins
             if (Dtotal > 21) and (Ptotal <= 21):
                 print("\nYou win!")
+            #if dealer greater than player, dealer wins
             elif (Dtotal > Ptotal):
                 print("\nDealer wins")
+            #if player has higher value than dealer, player wins
             else:
                 print("\nYou beat the dealer!")
-            play = False
+            #test = input("debug")
             break
         else:
             print("Please enter Y or N")
-        
-        
+            answer = 'Y'
+
+
+play = True
+
+while(play):
+    playBlackjack()
+    x = input("Would you like to play again? Y/N\n")
+    if x == "N":
+        play = False
+
+if debug:
+    print("loop broken")
 
     
 
