@@ -92,19 +92,23 @@ def playBlackjack():
         if answer == 'Y':
             player.append(dealCard())
         elif answer == 'N':
-            #calculates the same for dealer, however if dealer total 17 or higher, they stand
-            Dtotal = 0
             deal = True
             #deal is our truth value that will allow the dealer to keep dealing itself cards
             while(deal):
+                #calculates the same for dealer, however if dealer total 17 or higher, they stand
+                Dtotal = 0
                 #now prints all cards in dealer's hand
                 print("Dealer's hand: ")
                 for card in dealer:
+                    if debug:
+                        print("Card is ",card)
                     if card in facecards:
                         Dtotal += 10
                     else:
                         Dtotal += card
                     print(str(card) + ", ", end="")
+                    if debug:
+                        print("Debug; Dtotal after card, ",card,"is ",Dtotal)
                 print()
                 #if less than 17, deals 
                 if Dtotal < 17:
@@ -115,6 +119,11 @@ def playBlackjack():
                     deal = False
                 else:
                     deal = False
+            if debug:
+                print("Ptotal is")
+                print(Ptotal)
+                print("Dtotal is")
+                print(Dtotal)
             #if dealer over 21 but player is not, palyer wins
             if (Dtotal > 21) and (Ptotal <= 21):
                 print("\nYou win!")
@@ -141,7 +150,6 @@ while(play):
 
 if debug:
     print("loop broken")
-
     
 
 
